@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Results Page</title>
+</head>
+<body>
+    <h1>Results Page</h1>
+    <p>Welcome, {{ username }}!</p>
+    <form action="/results" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" required><br>
+        <input type="submit" value="Upload">
+    </form>
+    
+    {% if uploaded_filename %}
+    <a href="/download/{{ uploaded_filename }}">Download Your File</a>
+    {% endif %}
+</body>
+</html>
