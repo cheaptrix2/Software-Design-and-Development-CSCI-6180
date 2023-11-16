@@ -1,3 +1,85 @@
+from flask import Flask, render_template, request, redirect, url_for, session, flash, send_file, send_from_directory
+from flask_socketio import SocketIO, emit
+import mysql.connector
+import os
+from werkzeug.utils import secure_filename
+import csv
+from io import StringIO
+
+class Server:
+    def __init__(self):
+        self.app = Flask(__name__)
+        self.UPLOAD_FOLDER = '.\\uploads'
+        self.ALLOWED_EXTENSIONS = {'csv'}
+        self.app.config['UPLOAD_FOLDER'] = self.UPLOAD_FOLDER
+        self.app.config['SECRET_KEY'] = 'SoftwareProject'
+        self.app.config['SESSION_COOKIE_NAME'] = 'user_session'
+        self.app.add_url_rule(
+            "/uploads/<name>", endpoint="download_file", build_only=True
+        )
+        self.socketio = SocketIO(self.app)
+        
+        self.db = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="Mandarin143!",
+            database="company"
+        )
+
+        self.cursor = self.db.cursor()
+        self.cursor.execute("CREATE TABLE IF NOT EXISTS users (id INT AUTO_INCREMENT PRIMARY KEY, username VARCHAR(255), password VARCHAR(255))")
+
+        self.available_sockets = list(range(1, 101))
+        self.clients = []
+
+    def query_database(self, username, password):
+        query = "SELECT * FROM users WHERE username=%s AND password=%s"
+        self.cursor.execute(query, (username, password))
+        result = self.cursor.fetchone()
+        return result
+
+    def process_csv(self, file_path):
+        # Read the CSV file, process it, and append '0' to each row
+        with open(file_path, 'r') as file:
+            reader = csv.reader(file)
+            rows = [row + ['0'] for row in reader]
+
+        # Write the modified CSV to a new file
+        modified_file_path = f"{file_path}_modified.csv"
+        with open(modified_file_path, 'w', newline='') as modified_file:
+            writer = csv.writer(modified_file)
+            writer.writerows(rows)
+
+        return modified_file_path
+
+    def start(self):
+        @self.socketio.on('connect')
+        def handle_connect():
+            if 'username' in session:
+                username = session['username']
+                emit('show_username', {'username': username})
+
+            if self.available_sockets:
+                socket_number = self.available_sockets.pop(0)
+                client_sid = flask.request.namespace.sid
+                self.clients.append({'sid': client_sid, 'socket_number': socket_number})
+                emit('assign_socket', socket_number)
+            else:
+                emit('no_available_sockets')
+
+        @self.socketio.on('upload_file')
+        def handle_upload(data):
+        
+            if client:
+                socket_number = client['socket_number']
+                uploaded_file = data['file']
+                self.accept_uploaded_file(uploaded_file, socket_number)
+                result = self.process_csv(f"uploads/{uploaded_file.filename}")
+
+                # Provide a link for the client to download the modified CSV file
+                download_link = url_for('download_file', filename=f'modified_{uploaded_file.filename}', _external=True)
+                emit('csv_processed', {'socket_number': socket_number, 'result': result, 'download_link': download_link})
+
 from flask import Flask, render_template, request, redirect, url_for, session, flash, send_file
 from flask_socketio import SocketIO, emit
 import mysql.connector
