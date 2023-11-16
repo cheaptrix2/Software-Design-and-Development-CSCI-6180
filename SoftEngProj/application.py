@@ -15,17 +15,17 @@ db = mysql.connector.connect(
     host="localhost",
     user="root",
     password="Mandarin143!",
-    database="Hearthealth"
+    database="HEARTHEALTH"
 )
 
 cursor = db.cursor()
-cursor.execute("CREATE TABLE IF NOT EXISTS users (id INT AUTO_INCREMENT PRIMARY KEY, username VARCHAR(255), password VARCHAR(255))")
+#cursor.execute("CREATE TABLE IF NOT EXISTS users (id INT AUTO_INCREMENT PRIMARY KEY, username VARCHAR(255), password VARCHAR(255))")
 
 available_sockets = list(range(1, 101))
 clients = []
 
 def query_database(username, password):
-    query = "SELECT * FROM users WHERE username=%s AND password=%s"
+    query = "SELECT * FROM Users WHERE Username=%s AND Password=%s"
     cursor.execute(query, (username, password))
     result = cursor.fetchone()
     return result
