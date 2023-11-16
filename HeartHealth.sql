@@ -1,4 +1,4 @@
-#comment
+#Database for Heart Health Application
 
 CREATE DATABASE IF NOT EXISTS HEARTHEALTH;
 USE HEARTHEALTH;
