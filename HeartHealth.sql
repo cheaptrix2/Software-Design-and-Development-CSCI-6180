@@ -1,29 +1,27 @@
-#comment
-
 CREATE DATABASE IF NOT EXISTS HEARTHEALTH;
 USE HEARTHEALTH;
 
 CREATE TABLE  IF NOT EXISTS User(
-    UserID INT PRIMARY KEY NOT NULL,
+    UserID INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    FirstName VARCHAR(30) NOT NULL,
+    LastName VARCHAR(30) NOT NULL,
     Username VARCHAR(30) NOT NULL,
     Password VARCHAR(30) NOT NULL, 
     EmailAddress VARCHAR(40) NOT NULL,
     ProviderID INT,
-    FirstName VARCHAR(30),
-    LastName VARCHAR(30)
+    IsAdmin BOOLEAN DEFAULT 0
 );
+
     
-CREATE TABLE  IF NOT EXISTS Admin (
-	AdminID INT PRIMARY KEY,
-    UserID INT NOT NULL,
-    FOREIGN KEY (UserID) REFERENCES User(UserID)
-);
+INSERT INTO User (FirstName, LastName, Username, Password, EmailAddress, ProviderID, IsAdmin) VALUES 
+( "Soma", "Ezzadpanah","soma.ezzadpanah", "password", "soma.ezzadpanah@example.com",NULL, 1),
+( "Adel", "Mahfooz","adel.mahfooz", "password", "adel.mahfooz@example.com", NULL, 1),
+( "Joseph", "May","joseph.may", "password", "joseph.may@example.com", NULL, 1 ),
+("Taylor", "Hartman","taylor.hartman", "password", "taylor.hartman@example.com", NULL,1),
+("John", "Smith","john.smith", "password", "john.smith@example.com",105, 0 ),
+( "Jane", "Doe","jane.doe", "password", "jane.doe@example.com", 106, 0);
     
-INSERT INTO User (Username, Password, EmailAddress, ProviderID) VALUES 
-("soma.ezzadpanah", "password", "soma.ezzadpanah@example.com", 101),
-("adel.mahfooz", "password", "adel.mahfooz@example.com", 102),
-("joseph.may", "password", "joseph.may@example.com", 103),
-("taylor.hartman", "password", "taylor.hartman@example.com", 104),
-("john.smith", "password", "john.smith@example.com",105),
-("jane.doe", "password", "jane.doe@example.com", 106);
+Select *
+From User;
     
+Drop Table User;
