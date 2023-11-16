@@ -13,7 +13,7 @@ class Server:
             host="localhost",
             user="root",
             password="Mandarin143!",
-            database="company"
+            database="HEARTHEALTH"
         )
 
         self.cursor = self.db.cursor()
