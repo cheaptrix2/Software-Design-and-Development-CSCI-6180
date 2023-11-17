@@ -6,13 +6,12 @@
 <body>
     <h1>Results Page</h1>
     <p>Welcome, {{ username }}!</p>
-    <form action="/results" method="post" enctype="multipart/form-data">
-        <input type="file" name="file" required><br>
-        <input type="submit" value="Upload">
+    <form action="/results" method="post" enctype="multipart/form-data">	                	<input type="file" name="file" accept=".csv" required>
+        <button type="submit">Process and Download</button>
     </form>
+<a href="/">About Us</a>
+<a href="/login">Login</a>
     
-    {% if uploaded_filename %}
-    <a href="/download/{{ uploaded_filename }}">Download Your File</a>
-    {% endif %}
+
 </body>
 </html>

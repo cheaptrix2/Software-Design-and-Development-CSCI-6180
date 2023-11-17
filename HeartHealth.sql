@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+#Database for Heart Health Application
+
+>>>>>>> 65b933bcb61e951facd5cb21477e13b08a0bd148
 CREATE DATABASE IF NOT EXISTS HEARTHEALTH;
 USE HEARTHEALTH;
 
