@@ -6,7 +6,13 @@
     <link rel="stylesheet" href="results.css">
 </head>
 <body>
-    <h1>Results Page</h1>
+    <a href="../ContactPage/about.html">About Us</a> &nbsp;
+    <a href="../Login/login.html">Login</a>
+    <div style="text-align: center;">
+        <img src="../../../HeartHealth.png">
+    </div>
+    <br>
+    <h1>Submit Your Readings</h1>
     <p>Welcome, {{ username }}!</p>
     <form action="/results" method="post" enctype="multipart/form-data">
         <input type="file" name="file" required><br><br>
@@ -16,5 +22,10 @@
     {% if uploaded_filename %}
     <a href="/download/{{ uploaded_filename }}">Download Your File</a>
     {% endif %}
+    <br><br>
+    <div id="Results" hidden>
+        <h1>Our Findings</h1>
+    </div>
+
 </body>
 </html>
