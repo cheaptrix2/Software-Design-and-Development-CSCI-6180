@@ -2,16 +2,31 @@
 <html>
 <head>
     <title>Results Page</title>
+    <script src="../../../SoftEngProj/application.py"></script>
+    <link rel="stylesheet" href="results.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',   	filename='results.css') }}"
 </head>
 <body>
-    <h1>Results Page</h1>
+    <a href="/">About Us</a>
+    <a href="/login">Login</a>
+    <div style="text-align: center;">
+        <img src="../../../HeartHealth.png">
+    </div>
+    <br>
+    <h1>Submit Your Readings</h1>
     <p>Welcome, {{ username }}!</p>
-    <form action="/results" method="post" enctype="multipart/form-data">	                	<input type="file" name="file" accept=".csv" required>
-        <button type="submit">Process and Download</button>
+    <form action="/results" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" required><br><br>
+        <input type="submit" value="Upload">
     </form>
-<a href="/">About Us</a>
-<a href="/login">Login</a>
     
+    {% if uploaded_filename %}
+    <a href="/download/{{ uploaded_filename }}">Download Your File</a>
+    {% endif %}
+    <br><br>
+    <div id="Results" hidden>
+        <h1>Our Findings</h1>
+    </div>
 
 </body>
 </html>
