@@ -5,11 +5,11 @@ import os
 from werkzeug.utils import secure_filename
 import csv
 import sys
+import time  # Import the time module to use for creating unique filenames
 
 bigfolder_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(bigfolder_path)
 from ML.ECGClass import ECGClassifier
-
 
 MAX_CLIENTS = 100
 app = Flask(__name__)
@@ -25,13 +25,11 @@ db = mysql.connector.connect(
     database="HEARTHEALTH"
 )
 
-#Initalizing NN model
-# This code block can be placed anywhere, like whenever server starts
-ecg_classifier = ECGClassifier() # Making an object
-ecg_classifier.load_model() # Making the model
+# Initializing NN model
+ecg_classifier = ECGClassifier()
+ecg_classifier.load_model()
 
 cursor = db.cursor()
-#cursor.execute("CREATE TABLE IF NOT EXISTS users (id INT AUTO_INCREMENT PRIMARY KEY, username VARCHAR(255), password VARCHAR(255))")
 
 available_sockets = list(range(1, 101))
 clients = []
@@ -43,25 +41,27 @@ def query_database(username, password):
     return result
 
 def process_csv(file_path):
-    
-    ecg_classifier.load_data(file_path) # Load data 
-    ecg_classifier.predict() # Perform prediction within the object
-    results = ecg_classifier.print_predictions() # returns a list of prediction
+    ecg_classifier.load_data(file_path)
+    ecg_classifier.predict()
+    results = ecg_classifier.print_predictions()
     with open(file_path, 'r') as file:
-        #file = 'Test.csv' # A test file without the final label
-        
         reader = csv.reader(file)
         rows = []
-        for row,result in zip(reader,results):
-            rows.append(row + [result]) 
-        #rows = [row + ['0'] for row in reader]
+        for row, result in zip(reader, results):
+            rows.append(row + [result])
 
     modified_file_path = f"{file_path}_modified.csv"
     with open(modified_file_path, 'w', newline='') as modified_file:
         writer = csv.writer(modified_file)
         writer.writerows(rows)
 
-    return modified_file_path,results
+    #Format results for display
+    print('CSV RESULTS ARE:', results)
+    pretty_results = []
+    for i,label in enumerate(results):
+        pretty_results.append(f'{i+1}. {label}')
+    print('CSV PRETTY VErsions', pretty_results)
+    return modified_file_path, pretty_results
 
 @socketio.on('connect')
 def handle_connect():
@@ -86,6 +86,7 @@ def login():
         username = request.form['username']
         password = request.form['password']
         user = query_database(username, password)
+        print('User is:', user)
         if user is not None:
             print(f"Redirecting to results for {username}")
             session['username'] = username
@@ -94,6 +95,7 @@ def login():
 
 @app.route('/results', methods=['GET', 'POST'])
 def results():
+    formatted_results = []
     uploaded_filename = None
     if 'username' in session:
         username = session['username']
@@ -108,35 +110,52 @@ def results():
                 flash('No selected file')
                 return redirect(url_for('results'))
 
-            if uploaded_file and uploaded_file.filename.endswith('.csv'):
-                filename = secure_filename(uploaded_file.filename)
-                file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-                
-                # Save the uploaded file
-                #uploaded_file.save(file_path)
+            # Save the uploaded file to the uploads folder
+            temp_filename = f"{secure_filename(uploaded_file.filename)}_{int(time.time())}.csv"
+            temp_filepath = os.path.join(app.config['UPLOAD_FOLDER'], temp_filename)
+            uploaded_file.save(temp_filepath)
 
-                # Process the CSV file and get the modified file path
-                modified_file_path,results = process_csv(file_path)
+            # Process the CSV file and get the modified file path
+            modified_file_path, formatted_results = process_csv(temp_filepath)
 
-                # Set up response to allow file download
-                return send_file(
-                    modified_file_path,
-                    as_attachment=True,
-                    download_name=f'modified_{filename}',
-                    mimetype='text/csv'
-                )
-                display_results()
 
-        return render_template('results.html', username=username, uploaded_filename=uploaded_filename)
-    
+
+            # Set up response to allow file download
+            downloads_folder = os.path.expanduser("~")
+            modified_file_name = f'modified_{secure_filename(uploaded_file.filename)}'
+            modified_file_destination = os.path.join(downloads_folder, modified_file_name)
+
+            # Check if the destination file already exists, and change the name if it does
+            #to avoid naming errors
+            counter = 1
+            while os.path.exists(modified_file_destination):
+                modified_file_name = f'modified_{counter}_{secure_filename(uploaded_file.filename)}'
+                modified_file_destination = os.path.join(downloads_folder, modified_file_name)
+                counter += 1
+            #rename the file
+            os.rename(modified_file_path, modified_file_destination)
+            
+            print('FOrmatted results are:', formatted_results)
+            # Delete the original uploaded file
+            os.remove(temp_filepath)
+            return return_file(modified_file_destination, modified_file_name)
+            
+        
+        return render_template('results.html', username=username, uploaded_filename=uploaded_filename, formatted_results=formatted_results)
+
     return redirect(url_for('login'))
-
-def display_results():
-    print('Show results 1. result 2. results etc in that hidden div')
-
 @app.route('/')
 def about():
     return render_template('about.html')
 
+
+def return_file(modified_file_destination, modified_file_name):
+    #Send the file to users downloads folder
+        return send_file(
+            modified_file_destination,
+            as_attachment=True,
+            download_name=modified_file_name,
+            mimetype='text/csv'
+        )
 if __name__ == '__main__':
     socketio.run(app, debug=True)
