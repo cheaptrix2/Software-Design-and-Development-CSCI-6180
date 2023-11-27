@@ -1,12 +1,4 @@
-'''
-To Do's:
 
-test number of client connection
-
-
-match methods / classes to the document
-
-'''
 #Imports
 from flask import Flask, render_template, request, redirect, url_for, session, flash, send_file
 from flask_socketio import SocketIO, emit
