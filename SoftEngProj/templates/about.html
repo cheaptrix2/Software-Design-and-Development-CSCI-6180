@@ -2,7 +2,10 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="utf-8">
+    <script src="../../../SoftEngProj/application.py"></script>
     <title>About Us</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',   	filename='about.css') }}">
 </head>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
 <script type="text/javascript" charset="utf-8">
@@ -12,8 +15,32 @@
     });
 </script>
 <body>
-    <h1>About Us Page</h1>
+    
+    <a href="/login">Login</a>
+    <div style="text-align: center;">
+        <img src="../static/HeartHealth.png">
+    </div>
+    <br>
+    <div id="FullQueue" {% if full %} {% else %} hidden {% endif %}>
+        <h1>We are at max client capacity! Please try again in a few minutes</h1>	<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+    </div>
+
+    <div>
+        <h1>About Heart Health</h1>
+        <br>
+        <h2>Our Goal</h2>
+        <p>This is a paragraph within our about us page. Here we will talk about
+            the company and application. This is filler text to see how it looks
+            on the page. The goal is to have enough text here to properly form
+            the paragraph box within the page.
+        </p>
+    </div>
+    <br>
+    <div>
+    <h2>Our Technology</h2>
+        <p>Text about the Tensor Flow model here.</p>
+    </div>
     <!-- Add your about us content here -->
-	<a href="/login">Login</a>
+	
 </body>
 </html>
