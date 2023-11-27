@@ -22,7 +22,8 @@
     </div>
     <br>
     <div id="FullQueue" {% if full %} {% else %} hidden {% endif %}>
-        <h1>We are at max client capacity! Please try again in a few minutes</h1>	<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+	<h1>We are at max client capacity! Please try again in a few minutes</h1>
+	<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
     </div>
 
     <div>
@@ -38,7 +39,21 @@
     <br>
     <div>
     <h2>Our Technology</h2>
-        <p>Text about the Tensor Flow model here.</p>
+        <p><h3>Metric and loss functions:</h3> 
+In our recent project, we developed a machine learning model tailored for the classification of electrocardiogram (ECG) data. The model's architecture was designed to process input data consisting of 141 features, where the first 140 features represent the ECG measurements and the 141st feature is a binary label indicating the classification—'0' for Normal and '1' for Abnormal ECG patterns. As we had only 2 classes, we adopted BinaryAccuracy as our metric for performance evaluation and BinaryCrossentropy as the loss function to optimize during training.
+<h3>Optimizer:</h3>
+The backbone of our model's learning process is the Adam optimizer, selected for its effective handling of weights backpropagation. We set the learning rate at 0.0001 to allow for fine-grained adjustments to the model's weights.
+<h3>Activation Functions:</h3>
+In terms of the model's neural architecture, we employed the rectified linear unit (ReLU) activation function across all hidden layers for the non-linear transformations. The output layer utilizes the sigmoid activation function, which is well-suited for binary classification problems as it maps predictions to a probability between 0 and 1.
+<h3>Unit Testing:</h3>
+To ensure the robustness of our model, we conducted unit testing on a segregated subset of our dataset. The results were promising, with a validation accuracy of 99.44% and a test accuracy of 99.19%, indicating high reliability and generalization of the model.
+<h3>Architecture:</h3>
+On a high level, below is the architectural view of our model.
+</p>
+<div style="text-align: center;">
+        <img src="../static/modelImage.png">
+    </div>
+
     </div>
     <!-- Add your about us content here -->
 	
