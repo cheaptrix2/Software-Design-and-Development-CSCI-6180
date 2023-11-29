@@ -7,8 +7,8 @@ With the dramatic increase of patients to doctors, a need has arisen to be able 
 Make a full stack web application using Flask, Socket.io, MySQL, and TensorFlow so authorized healthcare providers can submit processed ECG data and have classifications of normal or abnormal appeneded to the readings.
 
 # Starting Server
-## Install Flask.
-## Navigate to SoftEngProj/
-'''
+Install Flask.
+Navigate to SoftEngProj/
+```
 $python application.py
-'''
+```
