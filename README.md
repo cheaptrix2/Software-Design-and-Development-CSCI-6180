@@ -1,5 +1,5 @@
 # Hearthealth
-# An application by Adel Mahfooz, Soma Ezzadpanah, Joseph May, and Taylor Hartman to classify preprocessed ECG data.
+#### An application by Adel Mahfooz, Soma Ezzadpanah, Joseph May, and Taylor Hartman to classify preprocessed ECG data.
 
 ## Problem Statement
 With the dramatic increase of patients to doctors, a need has arisen to be able to diagnose and treat patients faster and with the same accuracy, and also to diagnose with less doctor intervention.​ The use of artificial intelligence, when implemented safely and responsibly, can help with these tasks.
