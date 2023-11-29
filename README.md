@@ -7,24 +7,26 @@ With the dramatic increase of patients to doctors, a need has arisen to be able 
 ## Project Scope
 Make a full stack web application using Flask, Socket.io, MySQL, and TensorFlow so authorized healthcare providers can submit processed ECG data and have classifications of normal or abnormal appeneded to the readings.
 
-## Database
+## Starting and running application
+### Database
 - Install MySQL Workbench
 - Navigate to ./HeartHealth.sql
 - Run all queries in file
 
-## Starting Server
+### Starting Server
 - Install Flask.
+- Install FlaskSocketio.
 - Navigate to ./SoftEngProj/
 ```
 $python application.py
 ```
 
-## Opening Site
+### Opening Site
 - Open web browser of your choice
 - In address bar type: ```localhost:5000/``` or ```127.0.0.1:5000/```
 - Site navigation is at the top left of the pages
 
-## Data submission
+### Data submission
 - Login to site
 - Click "Upload" button
 - Submit approved file type and data type (test.csv is provided for functional testing)
